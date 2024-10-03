@@ -1,10 +1,12 @@
 const express = require("express");
-const usuariosRouter = require('./usuarios.router');
+const alunoRouter = require("./aluno.router");
+const professorRouter = require("./professor.router");
+const turmaRouter = require("./turma.router");
 
+const routes = express.Router();
 
-const routes = express.Routers();
-
-routes.use("/usuarios", usuariosRouter);
-routes.use // colocar aqui sub rotas para ALUNOS, PROFESSORES E TURMAS
+routes.use("/aluno", alunoRouter);
+routes.use("/professor", professorRouter);
+routes.use("/turmas", turmaRouter);
 
 module.exports = routes;
