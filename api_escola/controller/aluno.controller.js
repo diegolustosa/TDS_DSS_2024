@@ -14,10 +14,10 @@ module.exports = ({
     },
     atualizar: (req, res) => {
 
-        const { nome, email, ra } = req.body;
+        const { nome, email, id } = req.body;
 
         alunos.filter(item => {
-            if (item.ra == ra) {
+            if (item.id == id) {
                 item.nome = nome;
                 item.email = email;
                 return res.send("Aluno atualizado com sucesso!");
@@ -29,23 +29,23 @@ module.exports = ({
     },
     deletar: (req, res) => {
 
-        const { ra } = req.params;
+        const { id } = req.params;
 
-        const index = alunos.findIndex(item => item.ra == ra);
+        const index = alunos.findIndex(item => item.id == id);
 
         if (index === -1) {
-            return res.status(400).send("Ra do aluno não existe")
+            return res.status(400).send("id do aluno não existe")
         }
 
         alunos.splice(index, 1);
 
         return res.send(alunos);
     },
-    buscaPorRa: (req, res) => {
+    buscaPorId: (req, res) => {
 
-        const { ra } = req.params;
+        const { id } = req.params;
 
-        const aluno = alunos.filter(item => item.ra == ra);
+        const aluno = alunos.filter(item => item.id == id);
 
         if (!aluno.length) {
             res.status(400).send("Aluno não encontrado!");

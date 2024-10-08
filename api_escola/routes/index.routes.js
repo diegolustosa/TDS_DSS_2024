@@ -3,6 +3,7 @@ const alunoRouter = require("./aluno.router");
 const professorRouter = require("./professor.router");
 const turmaRouter = require("./turma.router");
 
+
 const routes = express.Router();
 
 routes.use("/aluno", alunoRouter);
