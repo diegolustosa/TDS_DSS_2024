@@ -11,7 +11,6 @@ CREATE TABLE mercado.produto (
 CREATE TABLE mercado.cliente (
     id int not null auto_increment primary key,
     nome varchar(255) not null,
-    varchar(255) not null,
     telefone varchar(25),
     status boolean default true
 );
@@ -24,3 +23,6 @@ CREATE TABLE mercado.pedido(
     qtd int,
     total decimal(9,2)
 );
+
+INSERT INTO mercado.cliente(nome, telefone)
+VALUES("Diego Alex", "4623223222");
