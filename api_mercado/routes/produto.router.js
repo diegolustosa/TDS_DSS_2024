@@ -1,4 +1,5 @@
 const routes = require("express").Router();
+const clienteController = require("../controller/produto.controller");
 
 //CRUD
 routes.post("/", () => { });
