@@ -1,32 +1,47 @@
 const conn = require("../mysql-connection");
-const produtoController = require("./produto.controller");
 
-//crud
+// CRUD
 module.exports = {
     cadastro: async (req, res) => {
-        var addUser = '';
-        try{
-            addUser = await conn.raw(`INSERT INTO PRODUTO(nome, preco) VALUES('${nome}`, `${preco}`);
-        } catch(error) {
+        const { nome, preco } = req.body;
+
+        if (!preco) {
+            return res.status(309).send({ msg: "É obrigatorio enviar o campo preco!" });
+        } else if (typeof preco !== "number") {
+            return res.status(309).send({ msg: "O campo preco precisa ser do tipo numerico!" });
+        }
+
+        try {
+            const data = await conn.raw(`INSERT INTO 
+                PRODUTO(NOME, PRECO)
+                VALUES("${nome}", ${preco})`);
+
+            return res.status(200).send(data[0]);
+        } catch (error) {
             console.log(error);
-            return res.status(500).send({msg: "Erro ao inserir produto"});
+            return res.status(500).send({ msg: "erro ao cadastrar o produto!" });
         }
     },
     consultar: async (req, res) => {
-try{
 
-       const data = await conn.raw("SELECT * FROM PRODUTO");
-    } catch (error) {
-        console.log(error);
-        return res.status(500).send({msg: "Erro ao consultar os produtos!"});
-    }
-       console.log(data)
-       res.send(data[0])
-       
-        /* conn.raw()
-        .then((data) => { })
-        .catch((error) => { }) */
+        try {
+            const data = await conn.raw("SELECT * FROM PRODUTO");
+            return res.send(data[0]);
+        } catch (error) {
+            console.log(error);
+            return res.status(500).send({ msg: "erro ao consultar os produtos!" });
+        }
     },
-    atualizar: (req,res) => {},
-    deletar: (req, res) => {},
-};
+    atualizar: (req, res) => { },
+    deletar: (req, res) => { },
+    buscaPorId: async (req, res) => {
+        const { id } = req.params;
+
+        // const data = await conn.raw(`SELECT * FROM PRODUTO WHERE id = ${id}`);
+        const data = await conn.select("nome", "preco")
+            .from("produto")
+            .where({ id });
+
+        return res.status(200).send(data);
+    }
+}
