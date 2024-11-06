@@ -1,8 +1,9 @@
 const routes = require("express").Router();
+const bibliotecaController = require("../controller/biblioteca.controller");
 
 //CRUD
-routes.post("/", () => { });
-routes.get("/", () => { });
+routes.post("/", bibliotecaController.cadastrar);
+routes.get("/", bibliotecaController.consultar);
 routes.put("/:id([0-9]+)", () => { });
 routes.delete("/:id([0-9]+)", ()=>{});
 

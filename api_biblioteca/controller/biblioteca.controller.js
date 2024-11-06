@@ -1,4 +1,4 @@
-const conn = require ("../mysql-connection");
+const conn = require ("../sql-connection");
 
 module.exports = {
     cadastrar: async (req, res) => {
@@ -16,7 +16,7 @@ module.exports = {
 
         const livros = await conn.select().from("livros").where({id: id_livros});
 
-        if(produto.length <= 0) {
+        if(aluno.length <= 0) {
             return res.status(400).send({msg: `O código ${id_livros} não é válido!`})
         }
         
@@ -32,5 +32,6 @@ module.exports = {
         }
     
     }
+    
 };
 
