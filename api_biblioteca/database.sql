@@ -1,6 +1,9 @@
 --COMANDOS DLL - ESTRUTURA DO BANCO DE DADOS MERCADO --
 --use mercado--
 
+-- REFORMULA AS TABELAS ISSO TA PODRE
+-- NÃO TA PASSANDO NO DBEAVER E NEM NO INSOMNIA
+
 CREATE DATABASE escola;
 CREATE TABLE escola.livros (
     id int not null auto_increment primary key,

@@ -3,7 +3,7 @@ const reservasController = require("../controller/reservas.controller");
 
 //CRUD
 routes.post("/", reservasController.cadastrar);
-routes.get("/", reservasController.consultar);
+routes.get("/", () => {});
 routes.put("/:id([0-9]+)", () => { });
 routes.delete("/:id([0-9]+)", ()=>{});
 
