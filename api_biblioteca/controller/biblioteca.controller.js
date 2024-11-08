@@ -1,29 +1,24 @@
 const conn = require ("../sql-connection");
-
+    //só tomando erro para cadastrar, o erro ta indo, cadastro nao
 module.exports = {
     cadastrar: async (req, res) => {
-        const {id_alunos, id_livros, quantidade} = req.body;
+        const {livros, status} = req.body;
         var total = 0;
 
         try {
-            const aluno = await conn.select()
-            .from("aluno")
-            .where({id: id_aluno});
+             livros = await conn.select()
+            .from("livros")
+            .where({id: id_livros});
         
-        if(aluno.length <= 0) {
-            return res.status(400).send({msg:`O código ${id_alunos} não existe!`});
+        if(livros.length <= 0) {
+            return res.status(400).send({msg:`O código ${id_livros} não existe!`});
         }
 
-        const livros = await conn.select().from("livros").where({id: id_livros});
-
-        if(aluno.length <= 0) {
-            return res.status(400).send({msg: `O código ${id_livros} não é válido!`})
-        }
+             livros = await conn.select().from("livros").where({id: id_livros});
         
             await conn("livros").insert({
-                id_aluno,
-                id_livros,
-                quantidade,
+                livros,
+                status,
             });
             
         } catch (error) {
