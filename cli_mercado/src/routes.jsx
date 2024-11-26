@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import Cliente from "./pages/cliente"
-import Produto from "./pages/produto"
-import Pedido from "./pages/pedido"
+import Cliente from "../pages/Cliente"
+import Produto from "../pages/Produto"
+import Pedido from "../pages/Pedido"
 
 
 function AppRoutes() {
@@ -9,9 +9,9 @@ function AppRoutes() {
         <>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/cliente" element={<Cliente />}></Route>
-                    <Route path="/produto" element={<Produto />}></Route>
-                    <Route path="/pedido" element={<Pedido />}></Route>
+                    <Route path="/Cliente" element={<Cliente />}></Route>
+                    <Route path="/Produto" element={<Produto />}></Route>
+                    <Route path="/Pedido" element={<Pedido />}></Route>
                 </Routes>
             </BrowserRouter>
         </>
