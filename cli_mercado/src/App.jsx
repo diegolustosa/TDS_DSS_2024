@@ -4,8 +4,9 @@ import AppRoutes from "./routes.jsx"
 function App() {
   return (
     <>
+    <Menu />
     <AppRoutes />
-      <Menu />
+      
     </>
   )
 }

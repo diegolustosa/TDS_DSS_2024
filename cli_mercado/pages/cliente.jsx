@@ -1,76 +1,73 @@
 import { useEffect, useState } from "react";
-import Api from "../src/Api"
+import Api from "../src/Api";
 
 function Cliente() {
 
     const [cliente, setCliente] = useState();
-    const [Nome, setNome] = useState();
-    const [Telefone, setTelefone] = useState();
 
+    const [nome, setNome] = useState();
+    const [telefone, setTelefone] = useState();
+    const [msgAviso, setMsgSucesso] = useState();
 
-    // const salvarCliente  = () {
-
-
-    //    Api.post("cliente", novoCliente)
-    //         .then((response) => {
-    //             console.log("Cliente salvo com sucesso:", response.data);
-    //             // Atualizar a tabela de clientes, se necessário
-    //             setCliente(response.data);
-    //         })
-    //         .catch((error) => {
-    //             console.error("Erro ao salvar cliente:", error);
-    //         });
-    // };
 
     useEffect(() => {
-        Api.get("cliente").then((response) => {
-            setCliente(response.data);
-            console.log(response.data)
-        });
-
-
+        carregarDados()
     }, []);
 
-    const salvarCliente = () => {
-        Api.post("cliente").then((response) => {
-            setNome(response.data);
-            setNumero(response.data);
-            console.log(response.data);
-
+    function carregarDados() {
+        Api.get("cliente").then((response) => {
+            setCliente(response.data);
+            // console.log(response.data)
         });
-    };
+    }
+
+    function salvar() {
+        Api.post('cliente', { nome, telefone }).then((response) => {
+            console.log(response.status)
+        });
+        if(response.status == 200) {
+            carregarDados();
+            setNome("");
+            setTelefone("");
+
+            setMsgSucesso(response.data.msg);
+        }
+    }
+
     return (
         <div className="container">
+            <div className="alert alert-warning" role="alert">
+                Apresentar a mensagem
+            </div>
+    
 
             <h1 className="text-uppercase display-6">Cliente</h1>
+            {nome} - {telefone}
             <form action="#">
-
-                <div form-group>
+                <div className="form-group">
                     <label>Nome</label>
                     <input type="text" className="form-control" placeholder="Nome"
                         onChange={(e) => {
-                            setNome(e.target.value);
+                            setNome(e.target.value)
                         }}
-                    ></input>
-                </div>
-
-                <div form-group>
-                    <label>Telefone</label>
-                    <input type="number" className="form-control" placeholder="telefone"
-                        onChange={(e) => {
-                            setTelefone(e.target.value);
-                        }}
-
                     />
                 </div>
-
+                <div className="form-group">
+                    <label>Telefone</label>
+                    <input type="number" className="form-control" placeholder="Telefone"
+                        onChange={(e) => {
+                            setTelefone(e.target.value)
+                        }}
+                    />
+                </div>
+                <div className="form-group">
+                    <button className="btn btn-primary btn-lg btn-block"
+                        onClick={() => {
+                            salvar()
+                        }}
+                    >Salvar</button>
+                </div>
             </form>
-
-            <div className="form-group">
-                <button onClick={salvarCliente} className="btn btn-primary">
-                    Salvar
-                </button>
-            </div>
 
             <table className="table table-striped">
                 <thead className="thead-dark">
@@ -86,9 +83,9 @@ function Cliente() {
                     {cliente?.map((item, index) => (
                         <tr key={index}>
                             <th scope="row">{item.id}</th>
-                            <td>{item.Nome}</td>
-                            <td>{item.Telefone}</td>
-                            <td>{item.Status}</td>
+                            <td>{item.nome}</td>
+                            <td>{item.telefone}</td>
+                            <td>{item.status}</td>
                         </tr>
                     ))}
 
@@ -102,7 +99,6 @@ function Cliente() {
             </table>
         </div>
     )
-};
-
+}
 
 export default Cliente

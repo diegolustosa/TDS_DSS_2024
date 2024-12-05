@@ -1,4 +1,5 @@
 const conn = require ("../mysql-connection");
+const cors = require('cors');
 
 module.exports = {
     cadastrar: async (req, res) => {

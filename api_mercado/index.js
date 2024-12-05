@@ -1,10 +1,12 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const indexRoutes = require("./routes/index.routes");
+const cors = require("cors");
 
 const conn = require("./mysql-connection");
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(indexRoutes);
 //conn.raw faz uma consulta no banco de dados da rota requerida em conn "select 1" faz com que retorne 1
