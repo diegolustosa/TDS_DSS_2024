@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import Api from "../src/Api";
+import Api from "../src/Api"
 
 function Cliente() {
 
     const [cliente, setCliente] = useState();
 
-    const [nome, setNome] = useState();
-    const [telefone, setTelefone] = useState();
-    const [msgAviso, setMsgSucesso] = useState();
+    const [nome, setNome] = useState("");
+    const [telefone, setTelefone] = useState("");
+
+    const [msgAviso, setMsgAviso] = useState("");
+    const [msgSucesso, setMsgSucesso] = useState("");
 
 
     useEffect(() => {
@@ -23,23 +25,42 @@ function Cliente() {
 
     function salvar() {
         Api.post('cliente', { nome, telefone }).then((response) => {
-            console.log(response.status)
-        });
-        if(response.status == 200) {
-            carregarDados();
-            setNome("");
-            setTelefone("");
 
-            setMsgSucesso(response.data.msg);
-        }
+            if (response.status == 200) {
+                carregarDados();
+                setNome("");
+                setTelefone("");
+
+                setMsgSucesso(response.data.msg);
+                setTimeout(() => {
+                    setMsgSucesso("")
+                }, "5000")
+
+            } else if (response.status == 309) {
+                setMsgAviso(response.data.msg);
+                setTimeout(() => {
+                    setMsgAviso("")
+                }, "5000");
+            }
+        });
     }
 
     return (
         <div className="container">
-            <div className="alert alert-warning" role="alert">
-                Apresentar a mensagem
-            </div>
-    
+
+            {msgAviso == ""
+                ? ""
+                : <div className="alert alert-warning" role="alert">
+                    {msgAviso}
+                </div>
+            }
+
+            {msgSucesso == ""
+                ? ""
+                : <div className="alert alert-success" role="alert">
+                    {msgSucesso}
+                </div>
+            }
 
             <h1 className="text-uppercase display-6">Cliente</h1>
             {nome} - {telefone}
@@ -50,6 +71,7 @@ function Cliente() {
                         onChange={(e) => {
                             setNome(e.target.value)
                         }}
+                        value={nome}
                     />
                 </div>
                 <div className="form-group">
@@ -58,6 +80,7 @@ function Cliente() {
                         onChange={(e) => {
                             setTelefone(e.target.value)
                         }}
+                        value={telefone}
                     />
                 </div>
                 <div className="form-group">
@@ -67,7 +90,7 @@ function Cliente() {
                         }}
                     >Salvar</button>
                 </div>
-            </form>
+            </form >
 
             <table className="table table-striped">
                 <thead className="thead-dark">
@@ -97,7 +120,7 @@ function Cliente() {
                     </tr> */}
                 </tbody>
             </table>
-        </div>
+        </div >
     )
 }
 
