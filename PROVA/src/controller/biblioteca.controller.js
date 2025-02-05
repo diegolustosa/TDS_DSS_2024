@@ -1,19 +1,29 @@
-const conn = require("../db-conn");
+const db = require("../db-conn");
 module.exports = ({
 
     inserirLivros: async (request, response) => {
-        const { Título, Genero, id_autor} = request.body;
+        const { Titulo, Genero, id_autor} = request.body;
 
-        try {
-            if (!Título || !Genero ) {
-                response.status(309).send("Todos os campos são obrigatórios!")
-            };
+        if (!Titulo || !Genero || !id_autor) {
+            return response.status(400).json({ mensagem: "Todos os campos são obrigatórios!" });
+          }
+        
+          try {
             
-
-            id_autor = await conn.select().from("Autores").where({id_autor: id});
-            await conn.raw(`INSERT INTO LIVROS(TITULO, id_autor ,GENERO) VALUES("${Título}", ${id_autor}, "${Genero}")`);
+            const autor = await db('Autores').where('id', id_autor).first();
+            if (!autor) {
+              return response.status(400).json({ mensagem: 'Autor não encontrado!' });
+            }
+        
             
-            response.status(200).send({ msg: "Livro cadastrado com sucesso" })
+            await db('Livros').insert({
+              TITULO: Titulo,      
+              ID_AUTOR: id_autor,  
+              GENERO: Genero      
+            });
+        
+            
+            response.status(200).json({ msg: "Livro cadastrado com sucesso!" });
         } catch (error) {
             response.status(500).send({ msg: `Erro ao cadastrar livro! ${error}`});
         }
@@ -37,9 +47,10 @@ module.exports = ({
 
     consultarLivros: async (request, response) => {
         try {
-            const data = await conn.raw("SELECT * FROM LIVROS");
-            response.status(200).send(data[0]);
+            const data = await db.select('*').from('Livros');
+            response.status(200).send(data);
         } catch (error) {
+            console.log(error)
             response.status(500).send({ msg: "Erro ao carregar lista" });
         }
         //response.status(200).send({msg: "consultar!"})
@@ -47,8 +58,8 @@ module.exports = ({
 
     consultarAutores: async (request, response) => {
         try {
-            const data = await conn.raw("SELECT * FROM AUTORES");
-            response.status(200).send(data[0]);
+            const data = await db.select('*').from('Autores');
+            response.status(200).send(data);
         } catch (error) {
             response.status(500).send({ msg: "Erro ao carregar lista" });
         }
@@ -57,9 +68,9 @@ module.exports = ({
 
     atualizarLivros: async (request, response) => {
         const {id} = request.params;
-        const {Título, Genero} = request.body;
+        const {Titulo, Genero} = request.body;
         try {
-        await conn.raw(`UPDATE PESSOAS SET NOME = "${Título}", Genero= "${Genero}" WHERE ID= "${id}"`);
+            db('Livros').where({ id: id }).update("Titulo", "Genero");
         response.status(200).send({ msg: "Livro atualizado com sucesso" });
         } catch {
             response.status(500).send({msg: "Erro ao atualizar livro!"})
@@ -70,8 +81,8 @@ module.exports = ({
         const {id} = request.params;
         const {Nome, Nacionalidade} = request.body;
         try {
-        await conn.raw(`UPDATE AUTORES SET NOME = "${Nome}", Nacionalidade= "${Nacionalidade}" WHERE ID= "${id}"`);
-        response.status(200).send({ msg: "Autor atualizado com sucesso" });
+            db('Autores').where({ id: id }).update("Nome", "Nacionalidade");
+            response.status(200).send({ msg: "Autor atualizado com sucesso" });
         } catch {
             response.status(500).send({msg: "Erro ao atualizar autor"})
         }
@@ -81,11 +92,12 @@ module.exports = ({
         const { id } = request.params;
 
         try {
-            await conn.raw(`DELETE FROM LIVROS WHERE ID = ${id}`);
-            response.status(200).send(id);
+            await db('Livros').del().where('id', '=', id);
+            response.status(200).send({ msg: "Livro deletado com sucesso" });
         }
         catch (error) {
             response.status(500).send({ msg: "Erro ao deletar livro!" });
+            console.log(error);
         }
     },
     
@@ -93,8 +105,8 @@ module.exports = ({
         const { id } = request.params;
 
         try {
-            await conn.raw(`DELETE FROM AUTORES WHERE ID = ${id}`);
-            response.status(200).send(id);
+            await db('Autor').del().where('id', '=', id);
+            response.status(200).send({ msg: "Autor deletado com sucesso" });
         }
         catch (error) {
             response.status(500).send({ msg: "Erro ao deletar autor" });
